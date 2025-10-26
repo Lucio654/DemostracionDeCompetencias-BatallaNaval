@@ -121,7 +121,7 @@ Reinicio: Botón "Nuevo Juego"
         +main(String[] args)
     }
     
-    class InterfazGrafica {
+class InterfazGrafica {
         -Juego juego
         -JButton[][] botonesJugador
         -JButton[][] botonesComputadora
@@ -131,7 +131,7 @@ Reinicio: Botón "Nuevo Juego"
         +realizarDisparo(int, int)
     }
     
-    class Juego {
+class Juego {
         -Jugador jugador
         -Jugador computadora
         -boolean turnoJugador
@@ -142,7 +142,7 @@ Reinicio: Botón "Nuevo Juego"
         +verificarFinJuego() boolean
     }
     
-    class Jugador {
+   class Jugador {
         -String nombre
         -Tablero tablero
         -int puntuacion
@@ -150,7 +150,7 @@ Reinicio: Botón "Nuevo Juego"
         +getNombre() String
     }
     
-    class Tablero {
+ class Tablero {
         -Celda[][] celdas
         -Barco[] barcos
         -final int FILAS = 10
@@ -161,7 +161,7 @@ Reinicio: Botón "Nuevo Juego"
         +getCelda(int, int) Celda
     }
     
-    class Barco {
+ class Barco {
         -String nombre
         -int tamaño
         -int danioRecibido
@@ -170,7 +170,7 @@ Reinicio: Botón "Nuevo Juego"
         +estaHundido() boolean
     }
     
-    class Celda {
+ class Celda {
         -Barco barco
         -boolean disparada
         +tieneBarco() boolean
@@ -178,7 +178,7 @@ Reinicio: Botón "Nuevo Juego"
         +estaDisparada() boolean
     }
     
-    BatallaNaval --> InterfazGrafica
+BatallaNaval --> InterfazGrafica
     InterfazGrafica --> Juego
     Juego "1" *-- "2" Jugador
     Jugador "1" *-- "1" Tablero
@@ -188,7 +188,7 @@ Reinicio: Botón "Nuevo Juego"
 
 3.2 Diagrama de Secuencia - Realizar Disparo
 
-    sequenceDiagram
+sequenceDiagram
     participant U as Usuario
     participant IG as InterfazGrafica
     participant J as Juego
@@ -196,7 +196,7 @@ Reinicio: Botón "Nuevo Juego"
     participant C as Celda
     participant B as Barco
     
-    U->>IG: Clic en coordenada (x,y)
+ U->>IG: Clic en coordenada (x,y)
     IG->>J: jugadorDispara(x,y)
     J->>T: recibirDisparo(x,y)
     T->>C: marcarDisparada()
@@ -225,23 +225,23 @@ Reinicio: Botón "Nuevo Juego"
 
 3.4 Diagrama de Casos de Uso
 
-    usecaseDiagram
+usecaseDiagram
     title Casos de Uso - Batalla Naval
     
-    actor Jugador as "Jugador"
+actor Jugador as "Jugador"
     actor Sistema as "Sistema"
     
-    Jugador --> (Iniciar Juego)
+Jugador --> (Iniciar Juego)
     Jugador --> (Realizar Disparo)
     Jugador --> (Ver Tablero)
     Jugador --> (Reiniciar Juego)
     
-    Sistema --> (Colocar Barcos)
+ Sistema --> (Colocar Barcos)
     Sistema --> (Generar Disparo PC)
     Sistema --> (Verificar Fin Juego)
     Sistema --> (Mostrar Resultados)
     
-    (Realizar Disparo) .> (Verificar Impacto) : include
+(Realizar Disparo) .> (Verificar Impacto) : include
     (Verificar Impacto) .> (Verificar Hundimiento) : include
 
 4. ARQUITECTURA DEL SISTEMA
@@ -258,17 +258,17 @@ Reinicio: Botón "Nuevo Juego"
 
 4.2 Flujo de Datos
 
-    1.Entrada: Usuario hace clic en interfaz
+1.Entrada: Usuario hace clic en interfaz
 
-    2.Procesamiento: Controlador valida y ejecuta lógica
+2.Procesamiento: Controlador valida y ejecuta lógica
 
-    3.Actualización: Modelo cambia su estado
+3.Actualización: Modelo cambia su estado
 
-    4.Salida: Vista se actualiza con nuevos datos
+4.Salida: Vista se actualiza con nuevos datos
 
 4.3 Estructura de Paquetes
 
-    batalla.naval/
+batalla.naval/
 ├── controlador/
 │   └── Juego.java
 ├── modelo/
