@@ -1,9 +1,10 @@
-classDiagram
+```mermaid
+    classDiagram
     class BatallaNaval {
         +main(String[] args)
     }
     
-class InterfazGrafica {
+    class InterfazGrafica {
         -Juego juego
         -JButton[][] botonesJugador
         -JButton[][] botonesComputadora
@@ -13,7 +14,7 @@ class InterfazGrafica {
         +realizarDisparo(int, int)
     }
     
-  class Juego {
+      class Juego {
         -Jugador jugador
         -Jugador computadora
         -boolean turnoJugador
