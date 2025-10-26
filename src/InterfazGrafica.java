@@ -1,12 +1,10 @@
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
-
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Random;
-
 
 //Clase que contiene toda la interfaz gráfica del juego 
 
@@ -19,15 +17,55 @@ public class InterfazGrafica {
     private JLabel labelTurno;
     private JPanel panelTableros;
     
-    // Símbolos Unicode que funcionan en todos los sistemas
-    private final String SIMBOLO_BARCO = "▓";
-    private final String SIMBOLO_IMPACTO = "X";
-    private final String SIMBOLO_AGUA = "•";
-    private final String SIMBOLO_HUNDIDO = "Ø";
+    // Iconos en lugar de símbolos Unicode
+    private final Icon ICONO_BARCO = crearIcono(Color.DARK_GRAY, 30, 30);
+    private final Icon ICONO_IMPACTO = crearIcono(Color.RED, 30, 30, "X");
+    private final Icon ICONO_AGUA = crearIcono(Color.BLUE, 30, 30, "•");
+    private final Icon ICONO_HUNDIDO = crearIcono(Color.ORANGE, 30, 30, "Ø");
     
     public InterfazGrafica() {
         juego = new Juego();
         crearVentanaPrincipal();
+    }
+    
+    private Icon crearIcono(Color color, int width, int height) {
+        return crearIcono(color, width, height, null);
+    }
+    
+    private Icon crearIcono(Color color, int width, int height, String texto) {
+        return new Icon() {
+            @Override
+            public void paintIcon(Component c, Graphics g, int x, int y) {
+                Graphics2D g2d = (Graphics2D) g.create();
+                g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                
+                // Dibujar fondo
+                g2d.setColor(color);
+                g2d.fillRect(x, y, width, height);
+                
+                // Dibujar borde
+                g2d.setColor(Color.GRAY);
+                g2d.drawRect(x, y, width, height);
+                
+                // Dibujar texto si se proporciona
+                if (texto != null) {
+                    g2d.setColor(Color.WHITE);
+                    g2d.setFont(new Font("Arial", Font.BOLD, 14));
+                    FontMetrics fm = g2d.getFontMetrics();
+                    int textX = x + (width - fm.stringWidth(texto)) / 2;
+                    int textY = y + (height - fm.getHeight()) / 2 + fm.getAscent();
+                    g2d.drawString(texto, textX, textY);
+                }
+                
+                g2d.dispose();
+            }
+            
+            @Override
+            public int getIconWidth() { return width; }
+            
+            @Override
+            public int getIconHeight() { return height; }
+        };
     }
     
     private void crearVentanaPrincipal() {
@@ -96,49 +134,48 @@ public class InterfazGrafica {
     private JPanel crearPanelLeyenda() {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        panel.setBorder(BorderFactory.createTitledBorder("AYUDA"));
-         Border borde = BorderFactory.createTitledBorder(
-        BorderFactory.createLineBorder(Color.GRAY, 1),
-        "AYUDA",  // Solo esto centrado
-        TitledBorder.CENTER,  //ESTO CENTRA EL TÍTULO
-        TitledBorder.TOP,
-        new Font("Arial", Font.BOLD, 20),
-        Color.BLUE
-         );   
+        
+        Border borde = BorderFactory.createTitledBorder(
+            BorderFactory.createLineBorder(Color.GRAY, 1),
+            "AYUDA",
+            TitledBorder.CENTER,
+            TitledBorder.TOP,
+            new Font("Arial", Font.BOLD, 20),
+            Color.BLUE
+        );
         panel.setBorder(borde);
         panel.setBackground(Color.WHITE);
         panel.setPreferredSize(new Dimension(200, 10));
         
-        // Crear items de leyenda con símbolos y colores
-        agregarItemLeyenda(panel, SIMBOLO_BARCO, "Barco (Tu flota)", Color.DARK_GRAY, Color.DARK_GRAY);
-        agregarItemLeyenda(panel, SIMBOLO_IMPACTO, "Impacto", Color.RED, Color.RED);
-        agregarItemLeyenda(panel, SIMBOLO_HUNDIDO, "Barco Hundido", Color.ORANGE, Color.ORANGE);
-        agregarItemLeyenda(panel, SIMBOLO_AGUA, "Agua", Color.BLUE, Color.BLUE);
-        agregarItemLeyenda(panel, " ", "Océano", new Color(135, 206, 250), new Color(135, 206, 250));
+        // Crear items de leyenda con iconos
+        agregarItemLeyenda(panel, ICONO_BARCO, "Barco (Tu flota)", Color.DARK_GRAY);
+        agregarItemLeyenda(panel, ICONO_IMPACTO, "Impacto", Color.RED);
+        agregarItemLeyenda(panel, ICONO_HUNDIDO, "Barco Hundido", Color.ORANGE);
+        agregarItemLeyenda(panel, ICONO_AGUA, "Agua", Color.BLUE);
+        
+        // Para el océano, crear un icono especial
+        Icon iconoOceano = crearIcono(new Color(135, 206, 250), 25, 25);
+        agregarItemLeyenda(panel, iconoOceano, "Océano", new Color(135, 206, 250));
         
         return panel;
     }
     
-    private void agregarItemLeyenda(JPanel panel, String simbolo, String texto, Color colorSimbolo, Color colorFondo) {
+    private void agregarItemLeyenda(JPanel panel, Icon icono, String texto, Color colorFondo) {
         JPanel itemPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 5));
         itemPanel.setBackground(Color.WHITE);
         itemPanel.setMaximumSize(new Dimension(170, 30));
         
-        // Panel para mostrar el símbolo con color de fondo
-        JPanel simboloPanel = new JPanel();
-        simboloPanel.setPreferredSize(new Dimension(25, 25));
-        simboloPanel.setBackground(colorFondo);
-        simboloPanel.setBorder(BorderFactory.createLineBorder(Color.GRAY));
-        
-        JLabel simboloLabel = new JLabel(simbolo, JLabel.CENTER);
-        simboloLabel.setForeground(colorSimbolo);
-        simboloLabel.setFont(new Font("Arial", Font.BOLD, 14));
-        simboloPanel.add(simboloLabel);
+        // Botón para mostrar el icono
+        JButton iconoBoton = new JButton(icono);
+        iconoBoton.setPreferredSize(new Dimension(25, 25));
+        iconoBoton.setBackground(colorFondo);
+        iconoBoton.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+        iconoBoton.setEnabled(false);
         
         JLabel textoLabel = new JLabel(texto);
         textoLabel.setFont(new Font("Arial", Font.PLAIN, 12));
         
-        itemPanel.add(simboloPanel);
+        itemPanel.add(iconoBoton);
         itemPanel.add(textoLabel);
         
         panel.add(itemPanel);
@@ -162,13 +199,13 @@ public class InterfazGrafica {
     private JPanel crearTableroIndividual(String titulo, boolean esJugador) {
         JPanel panel = new JPanel(new BorderLayout());
 
-         Border borde = BorderFactory.createTitledBorder(
-        BorderFactory.createLineBorder(Color.DARK_GRAY, 2),
-        titulo,  // "TU FLOTA" o "FLOTA ENEMIGA"
-        TitledBorder.CENTER,  // ← ESTO CENTRA EL TÍTULO
-        TitledBorder.TOP,
-        new Font("Arial", Font.BOLD, 20),
-        Color.BLACK
+        Border borde = BorderFactory.createTitledBorder(
+            BorderFactory.createLineBorder(Color.DARK_GRAY, 2),
+            titulo,
+            TitledBorder.CENTER,
+            TitledBorder.TOP,
+            new Font("Arial", Font.BOLD, 20),
+            Color.BLACK
         );
         panel.setBorder(borde);
         panel.setBackground(Color.WHITE);
@@ -184,12 +221,7 @@ public class InterfazGrafica {
         
         for (int i = 0; i < 10; i++) {
             for (int j = 0; j < 10; j++) {
-                JButton boton = new JButton();
-                boton.setPreferredSize(new Dimension(45, 45));
-                boton.setFont(new Font("Arial", Font.BOLD, 16));
-                boton.setBackground(new Color(135, 206, 250)); // Azul claro - Océano
-                boton.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY));
-                boton.setFocusPainted(false);
+                JButton boton = crearBotonTablero();
                 
                 if (esJugador) {
                     botonesJugador[i][j] = boton;
@@ -212,6 +244,18 @@ public class InterfazGrafica {
         panel.add(crearCoordenadasVerticales(), BorderLayout.WEST);
         
         return panel;
+    }
+    
+    private JButton crearBotonTablero() {
+        JButton boton = new JButton();
+        boton.setPreferredSize(new Dimension(45, 45));
+        boton.setFont(new Font("Arial", Font.BOLD, 16));
+        boton.setBackground(new Color(135, 206, 250)); // Azul claro - Océano
+        boton.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY));
+        boton.setFocusPainted(false);
+        boton.setHorizontalTextPosition(SwingConstants.CENTER);
+        boton.setVerticalTextPosition(SwingConstants.CENTER);
+        return boton;
     }
     
     private JPanel crearCoordenadas() {
@@ -267,14 +311,14 @@ public class InterfazGrafica {
             for (int j = 0; j < 10; j++) {
                 if (botonesJugador != null) {
                     botonesJugador[i][j].setBackground(colorOceano);
+                    botonesJugador[i][j].setIcon(null);
                     botonesJugador[i][j].setText("");
-                    botonesJugador[i][j].setForeground(Color.BLACK);
                     botonesJugador[i][j].setEnabled(false);
                 }
                 if (botonesComputadora != null) {
                     botonesComputadora[i][j].setBackground(colorOceano);
+                    botonesComputadora[i][j].setIcon(null);
                     botonesComputadora[i][j].setText("");
-                    botonesComputadora[i][j].setForeground(Color.BLACK);
                     botonesComputadora[i][j].setEnabled(true);
                 }
             }
@@ -368,39 +412,39 @@ public class InterfazGrafica {
                 Celda celdaJugador = juego.getJugador().getTablero().getCelda(i, j);
                 JButton boton = botonesJugador[i][j];
                 
+                // Limpiar icono y texto anterior
+                boton.setIcon(null);
+                boton.setText("");
+                
                 if (celdaJugador.estaDisparada()) {
                     if (celdaJugador.tieneBarco()) {
                         if (celdaJugador.getBarco().estaHundido()) {
-                            // Barco hundido - NARANJA PERMANENTE
+                            // Barco hundido - NARANJA
+                            boton.setIcon(ICONO_HUNDIDO);
                             boton.setBackground(Color.ORANGE);
-                            boton.setText(SIMBOLO_HUNDIDO);
-                            boton.setForeground(Color.WHITE);
                         } else {
                             // Impacto normal - ROJO
+                            boton.setIcon(ICONO_IMPACTO);
                             boton.setBackground(Color.RED);
-                            boton.setText(SIMBOLO_IMPACTO);
-                            boton.setForeground(Color.WHITE);
                         }
                     } else {
                         // Agua
+                        boton.setIcon(ICONO_AGUA);
                         boton.setBackground(Color.BLUE);
-                        boton.setText(SIMBOLO_AGUA);
-                        boton.setForeground(Color.WHITE);
                     }
                 } else if (celdaJugador.tieneBarco()) {
                     // Mostrar barco completo en el tablero del jugador
                     if (celdaJugador.getBarco().estaHundido()) {
+                        boton.setIcon(ICONO_HUNDIDO);
                         boton.setBackground(Color.ORANGE);
-                        boton.setText(SIMBOLO_HUNDIDO);
                     } else {
+                        boton.setIcon(ICONO_BARCO);
                         boton.setBackground(Color.DARK_GRAY);
-                        boton.setText(SIMBOLO_BARCO);
                     }
-                    boton.setForeground(Color.WHITE);
                 } else {
                     boton.setBackground(new Color(135, 206, 250)); // Azul océano
-                    boton.setText("");
                 }
+                boton.setForeground(Color.WHITE);
             }
         }
         
@@ -410,29 +454,30 @@ public class InterfazGrafica {
                 Celda celdaCompu = juego.getComputadora().getTablero().getCelda(i, j);
                 JButton boton = botonesComputadora[i][j];
                 
+                // Limpiar icono y texto anterior
+                boton.setIcon(null);
+                boton.setText("");
+                
                 if (celdaCompu.estaDisparada()) {
                     if (celdaCompu.tieneBarco()) {
                         if (celdaCompu.getBarco().estaHundido()) {
-                            // Barco hundido - NARANJA PERMANENTE
+                            // Barco hundido - NARANJA
+                            boton.setIcon(ICONO_HUNDIDO);
                             boton.setBackground(Color.ORANGE);
-                            boton.setText(SIMBOLO_HUNDIDO);
-                            boton.setForeground(Color.WHITE);
                         } else {
                             // Impacto normal - ROJO
+                            boton.setIcon(ICONO_IMPACTO);
                             boton.setBackground(Color.RED);
-                            boton.setText(SIMBOLO_IMPACTO);
-                            boton.setForeground(Color.WHITE);
                         }
                     } else {
                         // Agua
+                        boton.setIcon(ICONO_AGUA);
                         boton.setBackground(Color.BLUE);
-                        boton.setText(SIMBOLO_AGUA);
-                        boton.setForeground(Color.WHITE);
                     }
                 } else {
                     boton.setBackground(new Color(135, 206, 250)); // Azul océano
-                    boton.setText("");
                 }
+                boton.setForeground(Color.WHITE);
             }
         }
     }
