@@ -24,13 +24,14 @@ Un juego clásico de Batalla Naval implementado en Java con interfaz gráfica Sw
 ## Estructura del Proyecto
 BatallaNaval/
 ├── src/
-│ ├── BatallaNaval.java # Clase principal
-│ ├── InterfazGrafica.java # Interfaz gráfica
-│ ├── Juego.java # Lógica del juego
-│ ├── Jugador.java # Modelo de jugador
-│ ├── Tablero.java # Gestión del tablero
-│ ├── Barco.java # Modelo de barco
-│ └── Celda.java # Modelo de celda
+│ ├── Principal.java 
+│ ├── BatallaNavalGUI.java 
+│ ├── InterfazGrafica.java
+│ ├── Juego.java
+│ ├── Jugador.java
+│ ├── Tablero.java 
+│ ├── Barco.java 
+│ └── Celda.java
 └── README.md
 
 
@@ -94,7 +95,7 @@ X = Impacto
 
 • = Agua
 
-###Fin del Juego
+### Fin del Juego
 
 1.Victoria: Hundes todos los barcos enemigos
 2.Derrota: La PC hunde todos tus barcos
