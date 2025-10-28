@@ -137,7 +137,7 @@ public class InterfazGrafica {
         
         Border borde = BorderFactory.createTitledBorder(
             BorderFactory.createLineBorder(Color.GRAY, 1),
-            "AYUDA",
+            "AYUDA VISUAL",
             TitledBorder.CENTER,
             TitledBorder.TOP,
             new Font("Arial", Font.BOLD, 20),
