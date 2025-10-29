@@ -150,6 +150,8 @@ flowchart TB
     K -.-> M
     L -.-> M
 ```
+
+
 ### Explicación del Diagrama:
 
 1. Este diagrama muestra las interacciones entre el jugador y el sistema, identificando todas las funcionalidades principales que puede realizar cada actor durante el juego.
